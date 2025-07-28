@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABVA - Tienda de Mate</title>
+    <style>
+        /* Reset y estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        /* Header */
+        header {
+            background-color: #3a5a40;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .slogan {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        /* Navegación */
+        nav {
+            background-color: #588157;
+            padding: 0.5rem;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 1rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #3a5a40;
+        }
+        
+        /* Banner */
+        .hero {
+            height: 400px;
+            background-image: url('https://placehold.co/1920x800');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Productos */
+        .productos {
+            padding: 2rem;
+        }
+        
+        .productos h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: #3a5a40;
+        }
+        
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .producto-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .producto-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .producto-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .producto-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .producto-info {
+            padding: 1rem;
+        }
+        
+        .producto-titulo {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #3a5a40;
+        }
+        
+        .producto-desc {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .producto-precio {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #3a5a40;
+            margin-bottom: 1rem;
+        }
+        
+        .producto-btn {
+            background-color: #3a5a40;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .producto-btn:hover {
+            background-color: #588157;
+        }
+        
+        /* Carrito */
+        .carrito-container {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 350px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            transform: translateX(100%);
+            transition: transform 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .carrito-container.activo {
+            transform: translateX(0);
+        }
+        
+        .carrito-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .carrito-titulo {
+            font-size: 1.5rem;
+            color: #3a5a40;
+        }
+        
+        .cerrar-carrito {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .carrito-items {
+            margin-bottom: 1rem;
+        }
+        
+        .carrito-item {
+            display: flex;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .carrito-item-img {
+            width: 80px;
+            height: 80px;
+            margin-right: 1rem;
+        }
+        
+        .carrito-item-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .carrito-item-info {
+            flex: 1;
+        }
+        
+        .carrito-item-titulo {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .carrito-item-precio {
+            color: #3a5a40;
+            margin-bottom: 0.5rem;
+        }
+        
+        .carrito-item-cantidad {
+            display: flex;
+            align-items: center;
+        }
+        
+        .carrito-item-cantidad button {
+            background-color: #eee;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .carrito-item-cantidad span {
+            margin: 0 0.5rem;
+        }
+        
+        .eliminar-item {
+            color: #ff5555;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .carrito-total {
+            text-align: right;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #3a5a40;
+        }
+        
+        .carrito-acciones {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .btn-vaciar {
+            background-color: #ff5555;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-comprar {
+            background-color: #3a5a40;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-carrito {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #3a5a40;
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        
+        .carrito-contador {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ff5555;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #3a5a40;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .footer-info {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-columna {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-columna h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-columna ul {
+            list-style: none;
+        }
+        
+        .footer-columna ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-columna ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-columna ul li a:hover {
+            text-decoration: underline;
+        }
+        
+        .copy {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .carrito-container {
+                width: 100%;
+            }
+        }
+        
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .overlay.activo {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">ABVA</div>
+        <div class="slogan">Todo para tu mate, el mejor servicio</div>
+    </header>
+    
+    <!-- Navegación -->
+    <nav>
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#mate">Mates</a></li>
+            <li><a href="#bombillas">Bombillas</a></li>
+            <li><a href="#accesorios">Accesorios</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Banner -->
+    <section class="hero" id="inicio">
+        <img src="https://placehold.co/1920x800" alt="Mate tradicional argentino sobre una mesa de madera con yerba mate y termo al costado, iluminación cálida" style="display: none;">
+        <h1>Todo lo que necesitas para tu mate</h1>
+        <p>Los mejores productos seleccionados cuidadosamente para que disfrutes la mejor experiencia de mate</p>
+    </section>
+    
+    <!-- Productos - Mates -->
+    <section class="productos" id="mate">
+        <h2>Nuestros Mates</h2>
+        <div class="productos-grid">
+            <!-- Mate 1 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Mate de calabaza tradicional con virola de metal y base de cuero, sobre fondo de madera">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Mate Calabaza Clásico</h3>
+                    <p class="producto-desc">Mate de calabaza natural con virola de alpaca y base de cuero vacuno.</p>
+                    <p class="producto-precio">$4,500</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Mate Calabaza Clásico', 4500, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+            
+            <!-- Mate 2 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Mate camionero de madera de algarrobo con detalle de metal y refuerzos en los bordes">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Mate Camionero Algarrobo</h3>
+                    <p class="producto-desc">Mate camionero de madera de algarrobo con refuerzos metálicos.</p>
+                    <p class="producto-precio">$3,800</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Mate Camionero Algarrobo', 3800, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+            
+            <!-- Mate 3 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Mate de cerámica con diseño geométrico moderno en tonos tierra y blanco">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Mate Cerámica Diseño</h3>
+                    <p class="producto-desc">Mate de cerámica con diseño moderno, resistente y de fácil mantenimiento.</p>
+                    <p class="producto-precio">$2,900</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Mate Cerámica Diseño', 2900, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+            
+            <!-- Mate 4 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Mate imperial de vidrio con detalles dorados y forma curvilínea">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Mate Imperial Vidrio</h3>
+                    <p class="producto-desc">Mate de vidrio templado con diseño imperial y detalles dorados.</p>
+                    <p class="producto-precio">$5,200</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Mate Imperial Vidrio', 5200, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Productos - Bombillas -->
+    <section class="productos" id="bombillas">
+        <h2>Bombillas</h2>
+        <div class="productos-grid">
+            <!-- Bombilla 1 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Bombilla de alpaca con diseño tradicional y filtro desmontable">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Bombilla Alpaca Premium</h3>
+                    <p class="producto-desc">Bombilla de alpaca con filtro desmontable para fácil limpieza.</p>
+                    <p class="producto-precio">$2,100</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Bombilla Alpaca Premium', 2100, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+            
+            <!-- Bombilla 2 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Bombilla de acero inoxidable recta con filtro de resorte">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Bombilla Acero Inoxidable</h3>
+                    <p class="producto-desc">Bombilla de acero quirúrgico, resistente y de larga duración.</p>
+                    <p class="producto-precio">$1,800</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Bombilla Acero Inoxidable', 1800, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+            
+            <!-- Bombilla 3 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Bombilla pico de loro con virolas decoradas y diseño curvo">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Bombilla Pico de Loro</h3>
+                    <p class="producto-desc">Bombilla tipo pico de loro con diseño ergonómico y decoración.</p>
+                    <p class="producto-precio">$2,400</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Bombilla Pico de Loro', 2400, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+            
+            <!-- Bombilla 4 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Bombilla artesanal de plata con grabados tradicionales y filtro fino">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Bombilla Plata Artesanal</h3>
+                    <p class="producto-desc">Bombilla artesanal de plata 925 con grabados tradicionales.</p>
+                    <p class="producto-precio">$6,500</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Bombilla Plata Artesanal', 6500, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Productos - Accesorios -->
+    <section class="productos" id="accesorios">
+        <h2>Accesorios</h2>
+        <div class="productos-grid">
+            <!-- Accesorio 1 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Termo de acero inoxidable con capa térmica y diseño moderno en varios colores">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Termo Mate Premium</h3>
+                    <p class="producto-desc">Termo de acero inoxidable con 36 horas de temperatura.</p>
+                    <p class="producto-precio">$5,800</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Termo Mate Premium', 5800, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+            
+            <!-- Accesorio 2 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Yerbera de madera tallada con tapa hermética y cuchara dosificadora incluida">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Yerbera de Madera</h3>
+                    <p class="producto-desc">Yerbera artesanal de madera con tapa hermética.</p>
+                    <p class="producto-precio">$1,900</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Yerbera de Madera', 1900, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+            
+            <!-- Accesorio 3 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Set de mate completo con bombilla, yerbera y termo en estuche de regalo">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Kit Mate Completo</h3>
+                    <p class="producto-desc">Kit incluye mate, bombilla, yerbera y termo en estuche de regalo.</p>
+                    <p class="producto-precio">$7,900</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Kit Mate Completo', 7900, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+            
+            <!-- Accesorio 4 -->
+            <div class="producto-card">
+                <div class="producto-img">
+                    <img src="https://placehold.co/600x400" alt="Matera de cuero repujado con diseño gaucho y correa ajustable para el hombro">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-titulo">Matera de Cuero</h3>
+                    <p class="producto-desc">Matera de cuero vacuno repujado con diseño tradicional.</p>
+                    <p class="producto-precio">$3,200</p>
+                    <button class="producto-btn" onclick="agregarAlCarrito('Matera de Cuero', 3200, 'https://placehold.co/600x400')">Agregar al Carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Carrito -->
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="carrito-container" id="carrito-container">
+        <div class="carrito-header">
+            <h2 class="carrito-titulo">Tu Carrito</h2>
+            <button class="cerrar-carrito" onclick="cerrarCarrito()">×</button>
+        </div>
+        
+        <div class="carrito-items" id="carrito-items">
+            <!-- Items del carrito se agregarán aquí dinámicamente -->
+        </div>
+        
+        <div class="carrito-total">
+            Total: $<span id="carrito-total">0</span>
+        </div>
+        
+        <div class="carrito-acciones">
+            <button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar Carrito</button>
+            <button class="btn-comprar" onclick="finalizarCompra()">Finalizar Compra</button>
+        </div>
+    </div>
+    
+    <button class="btn-carrito" onclick="abrirCarrito()">
+        🛒
+        <span class="carrito-contador" id="carrito-contador">0</span>
+    </button>
+    
+    <!-- Footer -->
+    <footer id="contacto">
+        <div class="footer-info">
+            <div class="footer-columna">
+                <h3>Contacto</h3>
+                <ul>
+                    <li>Dirección: Av. Mate 1234, Buenos Aires</li>
+                    <li>Teléfono: +54 11 1234-5678</li>
+                    <li>Email: contacto@abvamate.com</li>
+                </ul>
+            </div>
+            
+            <div class="footer-columna">
+                <h3>Horarios</h3>
+                <ul>
+                    <li>Lunes a Viernes: 9:00 a 18:00</li>
+                    <li>Sábados: 10:00 a 14:00</li>
+                    <li>Domingos: Cerrado</li>
+                </ul>
+            </div>
+            
+            <div class="footer-columna">
+                <h3>Redes Sociales</h3>
+                <ul>
+                    <li><a href="#instagram">Instagram</a></li>
+                    <li><a href="#facebook">Facebook</a></li>
+                    <li><a href="#twitter">Twitter</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copy">
+            &copy; 2023 ABVA - Todos los derechos reservados
+        </div>
+    </footer>
+    
+    <script>
+        // Variables del carrito
+        let carrito = [];
+        const carritoItems = document.getElementById('carrito-items');
+        const carritoTotal = document.getElementById('carrito-total');
+        const carritoContador = document.getElementById('carrito-contador');
+        const carritoContainer = document.getElementById('carrito-container');
+        const overlay = document.getElementById('overlay');
+        
+        // Agregar producto al carrito
+        function agregarAlCarrito(nombre, precio, imagen) {
+            const productoExistente = carrito.find(item => item.nombre === nombre);
+            
+            if (productoExistente) {
+                productoExistente.cantidad++;
+            } else {
+                carrito.push({
+                    nombre,
+                    precio,
+                    imagen,
+                    cantidad: 1
+                });
+            }
+            
+            actualizarCarrito();
+            mostrarNotificacion(`${nombre} agregado al carrito`);
+        }
+        
+        // Eliminar producto del carrito
+        function eliminarDelCarrito(nombre) {
+            const index = carrito.findIndex(item => item.nombre === nombre);
+            
+            if (index !== -1) {
+                carrito.splice(index, 1);
+                actualizarCarrito();
+            }
+        }
+        
+        // Actualizar cantidad de producto en el carrito
+        function actualizarCantidad(nombre, accion) {
+            const producto = carrito.find(item => item.nombre === nombre);
+            
+            if (producto) {
+                if (accion === 'sumar') {
+                    producto.cantidad++;
+                } else if (accion === 'restar' && producto.cantidad > 1) {
+                    producto.cantidad--;
+                }
+                
+                actualizarCarrito();
+            }
+        }
+        
+        // Actualizar la interfaz del carrito
+        function actualizarCarrito() {
+            carritoItems.innerHTML = '';
+            let total = 0;
+            
+            carrito.forEach(item => {
+                const subtotal = item.precio * item.cantidad;
+                total += subtotal;
+                
+                const carritoItem = document.createElement('div');
+                carritoItem.classList.add('carrito-item');
+                carritoItem.innerHTML = `
+                    <div class="carrito-item-img">
+                        <img src="${item.imagen}" alt="${item.nombre}">
+                    </div>
+                    <div class="carrito-item-info">
+                        <h4 class="carrito-item-titulo">${item.nombre}</h4>
+                        <p class="carrito-item-precio">$${item.precio.toLocaleString()}</p>
+                        <div class="carrito-item-cantidad">
+                            <button onclick="actualizarCantidad('${item.nombre}', 'restar')">-</button>
+                            <span>${item.cantidad}</span>
+                            <button onclick="actualizarCantidad('${item.nombre}', 'sumar')">+</button>
+                        </div>
+                        <button class="eliminar-item" onclick="eliminarDelCarrito('${item.nombre}')">Eliminar</button>
+                    </div>
+                `;
+                
+                carritoItems.appendChild(carritoItem);
+            });
+            
+            carritoTotal.textContent = total.toLocaleString();
+            carritoContador.textContent = carrito.reduce((total, item) => total + item.cantidad, 0);
+        }
+        
+        // Vaciar carrito
+        function vaciarCarrito() {
+            carrito = [];
+            actualizarCarrito();
+            mostrarNotificacion('Carrito vaciado');
+        }
+        
+        // Finalizar compra
+        function finalizarCompra() {
+            if (carrito.length === 0) {
+                mostrarNotificacion('El carrito está vacío');
+                return;
+            }
+            
+            const numeroWhatsapp = '5491112345678'; // Reemplazar con número real
+            let mensaje = `¡Hola ABVA! Quiero hacer un pedido:%0A%0A`;
+            
+            carrito.forEach(item => {
+                mensaje += `${item.nombre} - $${item.precio.toLocaleString()} x ${item.cantidad}%0A`;
+            });
+            
+            mensaje += `%0ATotal: $${carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0).toLocaleString()}%0A%0AMi dirección de entrega es: [COMPLETAR]`;
+            
+            const urlWhatsapp = `https://wa.me/${numeroWhatsapp}?text=${mensaje}`;
+            
+            window.open(urlWhatsapp, '_blank');
+        }
+        
+        // Mostrar notificación
+        function mostrarNotificacion(mensaje) {
+            const notificacion = document.createElement('div');
+            notificacion.style.position = 'fixed';
+            notificacion.style.bottom = '20px';
+            notificacion.style.left = '50%';
+            notificacion.style.transform = 'translateX(-50%)';
+            notificacion.style.backgroundColor = '#3a5a40';
+            notificacion.style.color = 'white';
+            notificacion.style.padding = '10px 20px';
+            notificacion.style.borderRadius = '5px';
+            notificacion.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+            notificacion.style.zIndex = '1000';
+            notificacion.style.transition = 'opacity 0.5s';
+            notificacion.textContent = mensaje;
+            
+            document.body.appendChild(notificacion);
+            
+            setTimeout(() => {
+                notifica
+                    tion.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(notificacion);
+                }, 500);
+                    }, 3000);
+          }
